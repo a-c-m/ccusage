@@ -52,12 +52,13 @@ This tool helps you understand the value you're getting from your subscription b
 - 📊 **Model Breakdown**: View per-model cost breakdown with `--breakdown` flag
 - 📅 **Date Filtering**: Filter reports by date range using `--since` and `--until`
 - 📁 **Custom Path**: Support for custom Claude data directory locations
-- 🎨 **Beautiful Output**: Colorful table-formatted display with responsive width adjustment
+- 🎨 **Beautiful Output**: Colorful table-formatted display with automatic responsive layout
+- 📱 **Smart Tables**: Automatic compact mode for narrow terminals (< 100 characters) with essential columns
+- 📋 **Enhanced Model Display**: Model names shown as bulleted lists for better readability
 - 📄 **JSON Output**: Export data in structured JSON format with `--json`
 - 💰 **Cost Tracking**: Shows costs in USD for each day/month/session
 - 🔄 **Cache Token Support**: Tracks and displays cache creation and cache read tokens separately
 - 🌐 **Offline Mode**: Use pre-cached pricing data without network connectivity with `--offline` (Claude models only)
-- 📏 **Responsive Tables**: Automatic table width adjustment for narrow terminals with intelligent word wrapping
 - 🔌 **MCP Integration**: Built-in Model Context Protocol server for integration with other tools
 
 ## Important Disclaimer
@@ -122,6 +123,31 @@ bun install
 # Run the tool
 bun run start [subcommand] [options]
 ```
+
+## Configuration
+
+### Claude Data Directory Support
+
+ccusage automatically detects and aggregates usage data from multiple Claude Code installation directories:
+
+- **`~/.config/claude/projects/`** - New default location (Claude Code v1.0.30+)
+- **`~/.claude/projects/`** - Legacy location (pre-v1.0.30)
+
+> **Note**: The directory change from `~/.claude` to `~/.config/claude` in Claude Code v1.0.30 was an undocumented breaking change. ccusage handles both locations automatically to ensure compatibility across different Claude Code versions.
+
+### Custom Paths
+
+You can specify custom Claude data directories using the `CLAUDE_CONFIG_DIR` environment variable:
+
+```bash
+# Single custom path
+export CLAUDE_CONFIG_DIR="/path/to/your/claude/data"
+
+# Multiple paths (comma-separated)
+export CLAUDE_CONFIG_DIR="/path/to/claude1,/path/to/claude2"
+```
+
+When `CLAUDE_CONFIG_DIR` is set, ccusage will use those paths instead of the default locations.
 
 ## Usage
 
@@ -418,9 +444,19 @@ The MCP Inspector provides a web-based interface to:
 - Debug server responses
 - Export server configurations
 
+## Responsive Display
+
+ccusage automatically adapts its table layout based on your terminal width:
+
+- **Wide terminals (≥100 characters)**: Shows all columns with bulleted model lists
+- **Narrow terminals (<100 characters)**: Compact mode with essential columns only (Date, Models, Input, Output, Cost)
+- **Smart formatting**: Model names displayed as clean bulleted lists (• opus-4, • sonnet-4) instead of comma-separated text
+
+When in compact mode, ccusage displays a helpful message showing how to see the full data.
+
 ## Output Example
 
-### Daily Report
+### Daily Report (Wide Terminal)
 
 ```
 ╭──────────────────────────────────────────╮
@@ -432,12 +468,39 @@ The MCP Inspector provides a web-based interface to:
 ┌──────────────┬──────────────────┬────────┬─────────┬──────────────┬────────────┬──────────────┬────────────┐
 │ Date         │ Models           │ Input  │ Output  │ Cache Create │ Cache Read │ Total Tokens │ Cost (USD) │
 ├──────────────┼──────────────────┼────────┼─────────┼──────────────┼────────────┼──────────────┼────────────┤
-│ 2025-05-30   │ opus-4, sonnet-4 │    277 │  31,456 │          512 │      1,024 │       33,269 │     $17.58 │
-│ 2025-05-29   │ sonnet-4         │    959 │  39,662 │          256 │        768 │       41,645 │     $16.42 │
-│ 2025-05-28   │ opus-4           │    155 │  21,693 │          128 │        512 │       22,488 │      $8.36 │
+│ 2025-05-30   │ • opus-4         │    277 │  31,456 │          512 │      1,024 │       33,269 │     $17.58 │
+│              │ • sonnet-4       │        │         │              │            │              │            │
+│ 2025-05-29   │ • sonnet-4       │    959 │  39,662 │          256 │        768 │       41,645 │     $16.42 │
+│ 2025-05-28   │ • opus-4         │    155 │  21,693 │          128 │        512 │       22,488 │      $8.36 │
 ├──────────────┼──────────────────┼────────┼─────────┼──────────────┼────────────┼──────────────┼────────────┤
 │ Total        │                  │ 11,174 │ 720,366 │          896 │      2,304 │      734,740 │    $336.47 │
 └──────────────┴──────────────────┴────────┴─────────┴──────────────┴────────────┴──────────────┴────────────┘
+```
+
+### Daily Report (Compact Mode - Narrow Terminal)
+
+```
+╭──────────────────────────────────────────╮
+│                                          │
+│  Claude Code Token Usage Report - Daily  │
+│                                          │
+╰──────────────────────────────────────────╯
+
+┌───────────┬──────────────────┬────────┬─────────┬────────────┐
+│ Date      │ Models           │  Input │  Output │ Cost (USD) │
+├───────────┼──────────────────┼────────┼─────────┼────────────┤
+│ 2025      │ • opus-4         │    277 │  31,456 │    $17.58  │
+│ 05-30     │ • sonnet-4       │        │         │            │
+│ 2025      │ • sonnet-4       │    959 │  39,662 │    $16.42  │
+│ 05-29     │                  │        │         │            │
+│ 2025      │ • opus-4         │    155 │  21,693 │     $8.36  │
+│ 05-28     │                  │        │         │            │
+├───────────┼──────────────────┼────────┼─────────┼────────────┤
+│ Total     │                  │ 11,174 │ 720,366 │   $336.47  │
+└───────────┴──────────────────┴────────┴─────────┴────────────┘
+
+Running in Compact Mode
+Expand terminal width to see cache metrics and total tokens
 ```
 
 With `--breakdown` flag:

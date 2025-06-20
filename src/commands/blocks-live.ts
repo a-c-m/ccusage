@@ -21,9 +21,9 @@ import {
 	calculateBurnRate,
 	projectBlockUsage,
 	type SessionBlock,
-} from '../session-blocks.internal.ts';
+} from '../_session-blocks.ts';
 import { centerText, createProgressBar, formatDuration, stripAnsi, TerminalManager } from '../terminal-utils.internal.ts';
-import { formatCurrency, formatModelsDisplay, formatNumber } from '../utils.internal.ts';
+import { formatCurrency, formatModelsDisplay, formatNumber } from '../_utils.ts';
 
 /**
  * Live monitoring configuration

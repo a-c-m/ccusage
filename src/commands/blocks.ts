@@ -1,18 +1,18 @@
 import process from 'node:process';
 import { define } from 'gunshi';
 import pc from 'picocolors';
-import { BLOCKS_COMPACT_WIDTH_THRESHOLD, BLOCKS_DEFAULT_TERMINAL_WIDTH, BLOCKS_WARNING_THRESHOLD, DEFAULT_RECENT_DAYS } from '../consts.internal.js';
-import { getDefaultClaudePath, loadSessionBlockData } from '../data-loader.ts';
-import { log, logger } from '../logger.ts';
+import { BLOCKS_COMPACT_WIDTH_THRESHOLD, BLOCKS_DEFAULT_TERMINAL_WIDTH, BLOCKS_WARNING_THRESHOLD, DEFAULT_RECENT_DAYS } from '../_consts.ts';
 import {
 	calculateBurnRate,
 	DEFAULT_SESSION_DURATION_HOURS,
 	filterRecentBlocks,
 	projectBlockUsage,
 	type SessionBlock,
-} from '../session-blocks.internal.ts';
-import { sharedCommandConfig } from '../shared-args.internal.ts';
-import { formatCurrency, formatModelsDisplay, formatNumber, ResponsiveTable } from '../utils.internal.ts';
+} from '../_session-blocks.ts';
+import { sharedCommandConfig } from '../_shared-args.ts';
+import { formatCurrency, formatModelsDisplayMultiline, formatNumber, ResponsiveTable } from '../_utils.ts';
+import { getDefaultClaudePath, loadSessionBlockData } from '../data-loader.ts';
+import { log, logger } from '../logger.ts';
 import { startLiveMonitoring } from './blocks-live.ts';
 
 /**
@@ -75,15 +75,14 @@ function formatBlockTime(block: SessionBlock, compact = false): string {
 /**
  * Formats the list of models used in a block for display
  * @param models - Array of model names
- * @param compact - Whether to use compact formatting (unused currently)
  * @returns Formatted model names string
  */
-function formatModels(models: string[], compact = false): string {
+function formatModels(models: string[]): string {
 	if (models.length === 0) {
 		return '-';
 	}
-	// Use abbreviated format like other commands
-	return compact ? formatModelsDisplay(models) : formatModelsDisplay(models);
+	// Use consistent multiline format across all commands
+	return formatModelsDisplayMultiline(models);
 }
 
 /**
@@ -402,7 +401,7 @@ export const blocksCommand = define({
 						const row = [
 							formatBlockTime(block, useCompactFormat),
 							status,
-							formatModels(block.models, useCompactFormat),
+							formatModels(block.models),
 							formatNumber(totalTokens),
 						];
 

@@ -8,11 +8,11 @@
  * Used exclusively by blocks-live.ts for the --live flag functionality.
  */
 
-import type { CostMode, SortOrder } from './types.internal.ts';
+import type { CostMode, SortOrder } from './_types.ts';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { glob } from 'tinyglobby';
-import { CLAUDE_PROJECTS_DIR_NAME, USAGE_DATA_GLOB_PATTERN } from './consts.internal.js';
+import { CLAUDE_PROJECTS_DIR_NAME, USAGE_DATA_GLOB_PATTERN } from './_consts.ts';
 import {
 	calculateCostForEntry,
 	createUniqueHash,
@@ -25,7 +25,7 @@ import {
 	identifySessionBlocks,
 	type LoadedUsageEntry,
 	type SessionBlock,
-} from './session-blocks.internal.ts';
+} from './_session-blocks.ts';
 
 /**
  * Configuration for live monitoring
