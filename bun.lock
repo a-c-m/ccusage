@@ -3,6 +3,9 @@
   "workspaces": {
     "": {
       "name": "ccusage",
+      "dependencies": {
+        "@jsr/core__errorutil": "^1.2.1",
+      },
       "devDependencies": {
         "@antfu/utils": "^9.2.0",
         "@core/errorutil": "npm:@jsr/core__errorutil",
@@ -133,6 +136,8 @@
     "@jridgewell/sourcemap-codec": ["@jridgewell/sourcemap-codec@1.5.0", "", {}, "sha512-gv3ZRaISU3fjPAgNsriBRqGWQL6quFx04YMPW/zD8XMLsU32mhCCbfbO6KZFLjvYpCZ8zyDEgqsgf+PwPaM7GQ=="],
 
     "@jridgewell/trace-mapping": ["@jridgewell/trace-mapping@0.3.25", "", { "dependencies": { "@jridgewell/resolve-uri": "^3.1.0", "@jridgewell/sourcemap-codec": "^1.4.14" } }, "sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ=="],
+
+    "@jsr/core__errorutil": ["@jsr/core__errorutil@1.2.1", "https://npm.jsr.io/~/11/@jsr/core__errorutil/1.2.1.tgz", { "dependencies": { "@jsr/core__unknownutil": "^4.0.0" } }, "sha512-ZcMdES9RM6EXIAeQGCbgcNbqTfpHmn8hjAolsr2va7PUI05LxZVKl3B1ml/bpK5QRDDruGg/OK8P9GAaB6t7hA=="],
 
     "@jsr/core__unknownutil": ["@jsr/core__unknownutil@4.3.0", "https://npm.jsr.io/~/11/@jsr/core__unknownutil/4.3.0.tgz", {}, "sha512-Rs+fY0+WX4pYG6B93M3/C9MVpE77Jlr69iYTC2PU+hTLOyu5CcwN17Og7titcWRoTdEJhFHYb4T5q+1bnEGZfQ=="],
 

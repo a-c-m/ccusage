@@ -43,6 +43,9 @@
 		"test": "vitest",
 		"typecheck": "tsgo --noEmit"
 	},
+	"dependencies": {
+		"@jsr/core__errorutil": "^1.2.1"
+	},
 	"devDependencies": {
 		"@antfu/utils": "^9.2.0",
 		"@core/errorutil": "npm:@jsr/core__errorutil",

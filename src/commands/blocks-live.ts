@@ -13,17 +13,14 @@
  * - Model information
  */
 
+import type { SessionBlock } from '../_session-blocks.ts';
 import process from 'node:process';
 import pc from 'picocolors';
+import { calculateBurnRate, projectBlockUsage } from '../_session-blocks.ts';
+import { formatCurrency, formatModelsDisplay, formatNumber } from '../_utils.ts';
 import { LiveMonitor } from '../live-monitor.internal.js';
 import { logger } from '../logger.ts';
-import {
-	calculateBurnRate,
-	projectBlockUsage,
-	type SessionBlock,
-} from '../_session-blocks.ts';
 import { centerText, createProgressBar, formatDuration, stripAnsi, TerminalManager } from '../terminal-utils.internal.ts';
-import { formatCurrency, formatModelsDisplay, formatNumber } from '../_utils.ts';
 
 /**
  * Live monitoring configuration
@@ -79,7 +76,10 @@ export async function startLiveMonitoring(config: LiveMonitoringConfig): Promise
 		terminal.cleanup();
 		terminal.clearScreen();
 		logger.info('Live monitoring stopped.');
-		process.exit(0);
+		// Check if process.exitCode is already set before explicitly exiting
+		if (process.exitCode == null) {
+			process.exit(0);
+		}
 	};
 
 	process.on('SIGINT', cleanup);
@@ -119,7 +119,9 @@ export async function startLiveMonitoring(config: LiveMonitoringConfig): Promise
 	}
 	catch (error) {
 		terminal.clearScreen();
-		terminal.write(pc.red(`Error: ${error instanceof Error ? error.message : String(error)}\n`));
+		const errorMessage = error instanceof Error ? error.message : String(error);
+		terminal.write(pc.red(`Error: ${errorMessage}\n`));
+		logger.error(`Live monitoring error: ${errorMessage}`);
 		await sleep(config.refreshInterval);
 	}
 }
